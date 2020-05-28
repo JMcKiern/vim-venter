@@ -6,8 +6,8 @@ if exists("g:loaded_venter")
 endif
 let g:loaded_venter = 1
 
-if !exists("g:venter_open_winids")
-	let g:venter_open_winids = {}
+if !exists("s:open_winids")
+	let s:open_winids = {}
 endif
 
 if !exists("g:venter_disable_vertsplit")
@@ -25,7 +25,7 @@ if !exists(":VenterResize")
 endif
 
 function! Venter()
-	if exists("t:venter_tabid") && has_key(g:venter_open_winids, t:venter_tabid)
+	if exists("t:venter_tabid") && has_key(s:open_winids, t:venter_tabid)
 		return
 	endif
 	if exists("g:venter_disable_vertsplit") && g:venter_disable_vertsplit
@@ -41,10 +41,10 @@ function! Venter()
 
 	let l:left_winid = s:CreateWindow('topleft')
 	let l:right_winid = s:CreateWindow('botright')
-	let t:venter_tabid = len(g:venter_open_winids) > 0 ? max(keys(g:venter_open_winids)) + 1 : 1
-	execute 'let g:venter_open_winids.'.t:venter_tabid.' = [l:left_winid, l:right_winid]'
+	let t:venter_tabid = len(s:open_winids) > 0 ? max(keys(s:open_winids)) + 1 : 1
+	execute 'let s:open_winids.'.t:venter_tabid.' = [l:left_winid, l:right_winid]'
 
-	if len(g:venter_open_winids) == 1
+	if len(s:open_winids) == 1
 		augroup venter
 			autocmd VimResized,TabEnter,WinEnter * call s:ResizeWindows()
 			autocmd SafeState * call s:DisableStatuslines()
@@ -54,15 +54,15 @@ function! Venter()
 endfunction
 
 function! VenterClose()
-	if exists("t:venter_tabid") && has_key(g:venter_open_winids, t:venter_tabid)
-		execute 'let l:winids = deepcopy(g:venter_open_winids.'.t:venter_tabid.')'
+	if exists("t:venter_tabid") && has_key(s:open_winids, t:venter_tabid)
+		execute 'let l:winids = deepcopy(s:open_winids.'.t:venter_tabid.')'
 		for idx in range(0, len(l:winids)-1)
 			let l:winnr = win_id2win(l:winids[idx])
 			if l:winnr
 				execute l:winnr.'wincmd c'
 			endif
 		endfor
-		execute 'unlet g:venter_open_winids.'.t:venter_tabid
+		execute 'unlet s:open_winids.'.t:venter_tabid
 		unlet t:venter_tabid
 	endif
 
@@ -80,26 +80,26 @@ endfunction
 
 function! s:CheckWinIds()
 	" Check the winids for padding windows in the current tab - remove if no longer valid
-	if exists("t:venter_tabid") && has_key(g:venter_open_winids, t:venter_tabid)
-		execute 'let l:winids = deepcopy(g:venter_open_winids.'.t:venter_tabid.')'
+	if exists("t:venter_tabid") && has_key(s:open_winids, t:venter_tabid)
+		execute 'let l:winids = deepcopy(s:open_winids.'.t:venter_tabid.')'
 		for idx in range(0, len(l:winids)-1)
 			let l:winnr = win_id2win(l:winids[idx])
 			if !l:winnr
-				execute 'call remove(g:venter_open_winids.'.t:venter_tabid.', '.idx.')'
+				execute 'call remove(s:open_winids.'.t:venter_tabid.', '.idx.')'
 			endif
 		endfor
 	endif
 
 	" If no padding windows in tab, remove tab from dict
-	if exists("t:venter_tabid") && has_key(g:venter_open_winids, t:venter_tabid)
-		execute 'let l:numwin = len(g:venter_open_winids.'.t:venter_tabid.')'
+	if exists("t:venter_tabid") && has_key(s:open_winids, t:venter_tabid)
+		execute 'let l:numwin = len(s:open_winids.'.t:venter_tabid.')'
 		if l:numwin == 0
-			execute 'unlet g:venter_open_winids.'.t:venter_tabid
+			execute 'unlet s:open_winids.'.t:venter_tabid
 		endif
 	endif
 
 	" If no padding windows in any tab, remove autocmds
-	if len(g:venter_open_winids) == 0
+	if len(s:open_winids) == 0
 		augroup venter
 			autocmd!
 		augroup END
@@ -107,11 +107,11 @@ function! s:CheckWinIds()
 	endif
 
 	" If there are only padding windows left, close tab and open a new one
-	if exists("t:venter_tabid") && has_key(g:venter_open_winids, t:venter_tabid)
-		execute 'let l:numwin = len(g:venter_open_winids.'.t:venter_tabid.')'
-		execute 'let l:winids = deepcopy(g:venter_open_winids.'.t:venter_tabid.')'
+	if exists("t:venter_tabid") && has_key(s:open_winids, t:venter_tabid)
+		execute 'let l:numwin = len(s:open_winids.'.t:venter_tabid.')'
+		execute 'let l:winids = deepcopy(s:open_winids.'.t:venter_tabid.')'
 		if winnr('$') == l:numwin
-			execute 'unlet g:venter_open_winids.'.t:venter_tabid
+			execute 'unlet s:open_winids.'.t:venter_tabid
 			tabnew
 			tabclose -1
 		endif
@@ -171,8 +171,8 @@ function! s:ResizeWindows()
 endfunction
 
 function! s:GetCurTabWinIds()
-	if exists("t:venter_tabid") && has_key(g:venter_open_winids, t:venter_tabid)
-		execute 'let l:winids = deepcopy(g:venter_open_winids.'.t:venter_tabid.')'
+	if exists("t:venter_tabid") && has_key(s:open_winids, t:venter_tabid)
+		execute 'let l:winids = deepcopy(s:open_winids.'.t:venter_tabid.')'
 		return l:winids
 	endif
 	return []
