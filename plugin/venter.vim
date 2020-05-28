@@ -130,12 +130,6 @@ function! s:CreateWindow(pos)
 	return l:winid
 endfunction
 
-function! s:ReturnToPrev()
-	echom 'winnr() '.winnr()
-	echom 'winnr(''#'') '.winnr('#')
-	execute winnr('#').' wincmd w'
-endfunction
-
 function! s:DisableStatuslines()
 	call s:CheckWinIds()
 	let l:winids = s:GetCurTabWinIds()
