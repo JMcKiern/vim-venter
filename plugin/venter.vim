@@ -31,10 +31,11 @@ function! Venter()
 	if exists("g:venter_disable_vertsplit") && g:venter_disable_vertsplit
 		" Remove and hide vertical splitter
 		set fillchars+=vert:\ 
+		let s:prevbg = synIDattr(synIDtrans(hlID("VertSplit")), "bg")
 		if has("gui_running")
-			highlight VertSplit guifg=bg guibg=bg
+			highlight VertSplit guibg=bg
 		else
-			highlight VertSplit ctermfg=bg ctermbg=bg
+			highlight VertSplit ctermbg=bg
 		endif
 	endif
 
@@ -63,6 +64,15 @@ function! VenterClose()
 		endfor
 		execute 'unlet g:venter_open_winids.'.t:venter_tabid
 		unlet t:venter_tabid
+	endif
+
+	if exists("g:venter_disable_vertsplit") && g:venter_disable_vertsplit
+		set fillchars-=vert:\ 
+		if has("gui_running")
+			execute 'highlight VertSplit guibg='.s:prevbg
+		else
+			execute 'highlight VertSplit ctermbg='.s:prevbg
+		endif
 	endif
 
 	call s:CheckWinIds()
