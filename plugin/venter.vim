@@ -31,7 +31,11 @@ function! Venter()
 	if exists("g:venter_disable_vertsplit") && g:venter_disable_vertsplit
 		" Remove and hide vertical splitter
 		set fillchars+=vert:\ 
-		highlight VertSplit guifg=NONE guibg=bg cterm=NONE
+		if has("gui_running")
+			highlight VertSplit guifg=bg guibg=bg
+		else
+			highlight VertSplit ctermfg=bg ctermbg=bg
+		endif
 	endif
 
 	let l:left_winid = s:CreateWindow('topleft')
