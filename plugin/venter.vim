@@ -91,8 +91,9 @@ function! s:CheckWinIds()
 	" If no padding windows in any tab, remove autocmds
 	if len(g:venter_open_winids) == 0
 		augroup venter
-			au!
+			autocmd!
 		augroup END
+		augroup! venter
 	endif
 
 	" If there are only padding windows left, close tab and open a new one
@@ -123,7 +124,9 @@ function! s:CreateWindow(pos)
 	" setlocal buftype=nofile bufhidden=wipe nomodifiable nobuflisted
 
 	" Return to previous window if padding window selected
-	autocmd WinEnter <buffer> execute winnr('#').' wincmd w'
+	augroup venter
+		autocmd WinEnter <buffer> execute winnr('#').' wincmd w'
+	augroup END
 
 	let l:winid=win_getid()
 	execute bufwinnr(l:prevbuf).'wincmd w'
