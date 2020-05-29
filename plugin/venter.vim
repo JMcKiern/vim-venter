@@ -37,6 +37,7 @@ function! Venter()
 		else
 			highlight VertSplit ctermbg=bg
 		endif
+		let s:vertsplit_hidden = v:true
 	endif
 
 	let l:left_winid = s:CreateWindow('topleft')
@@ -66,7 +67,7 @@ function! VenterClose()
 		unlet t:venter_tabid
 	endif
 
-	if exists("g:venter_disable_vertsplit") && g:venter_disable_vertsplit
+	if exists("g:venter_disable_vertsplit") && g:venter_disable_vertsplit && exists("s:vertsplit_hidden")
 		set fillchars-=vert:\ 
 		if has("gui_running")
 			execute 'highlight VertSplit guibg='.s:prevbg
