@@ -48,10 +48,15 @@ function! Venter()
 	if len(s:open_winids) == 1
 		augroup venter
 			autocmd VimResized,TabEnter,WinEnter * call s:ResizeWindows()
-			autocmd SafeState * call s:DisableStatuslines()
+			if exists('##SafeState')
+				autocmd SafeState * call s:DisableStatuslines()
+			else
+				autocmd WinEnter * call timer_start(0, {-> s:DisableStatuslines()})
+			endif
 		augroup END
 	endif
 	call s:ResizeWindows()
+	call s:DisableStatuslines()
 endfunction
 
 function! VenterClose()
@@ -162,7 +167,11 @@ function! s:ResizeWindows()
 		let l:winnr = win_id2win(l:winid)
 		if l:winnr
 			execute 'vertical '.l:winnr.'resize '. (exists("g:venter_width") ? g:venter_width : &columns/4)
-			let l:buflines = line('$', l:winid)
+			if !has("nvim")
+				let l:buflines = line('$', l:winid)
+			else
+				let l:buflines = len(getbufline(winbufnr(l:winnr), 1, '$'))
+			endif
 			let l:diff = &lines - l:buflines
 			if l:diff > 0
 				call appendbufline(winbufnr(l:winnr), l:buflines, map(range(0, l:diff), '""'))
