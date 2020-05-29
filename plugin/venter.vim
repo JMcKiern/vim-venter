@@ -167,11 +167,11 @@ function! s:ResizeWindows()
 		let l:winnr = win_id2win(l:winid)
 		if l:winnr
 			execute 'vertical '.l:winnr.'resize '. (exists("g:venter_width") ? g:venter_width : &columns/4)
-			if !has("nvim")
+			try
 				let l:buflines = line('$', l:winid)
-			else
+			catch /^Vim\%((\a\+)\)\=:E118:/
 				let l:buflines = len(getbufline(winbufnr(l:winnr), 1, '$'))
-			endif
+			endtry
 			let l:diff = &lines - l:buflines
 			if l:diff > 0
 				call appendbufline(winbufnr(l:winnr), l:buflines, map(range(0, l:diff), '""'))
