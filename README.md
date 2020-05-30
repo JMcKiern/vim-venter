@@ -1,6 +1,6 @@
-# venter.vim
+# vim-venter
 
-Vim plugin to vertically center the current window(s)
+vim-venter is a vim plugin that vertically centers the current window(s)
 
 ![](demo.gif)
 
