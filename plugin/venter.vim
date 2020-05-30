@@ -28,10 +28,13 @@ function! Venter()
 	if exists("t:venter_tabid") && has_key(s:open_winids, t:venter_tabid)
 		return
 	endif
+
 	if exists("g:venter_disable_vertsplit") && g:venter_disable_vertsplit
 		" Remove and hide vertical splitter
 		set fillchars+=vert:\ 
-		let s:prevbg = synIDattr(synIDtrans(hlID("VertSplit")), "bg")
+		if !exists("s:prevbg")
+			let s:prevbg = synIDattr(synIDtrans(hlID("VertSplit")), "bg")
+		endif
 		if has("gui_running")
 			highlight VertSplit guibg=bg
 		else
@@ -72,15 +75,6 @@ function! VenterClose()
 		unlet t:venter_tabid
 	endif
 
-	if exists("g:venter_disable_vertsplit") && g:venter_disable_vertsplit && exists("s:vertsplit_hidden")
-		set fillchars-=vert:\ 
-		if has("gui_running")
-			execute 'highlight VertSplit guibg='.s:prevbg
-		else
-			execute 'highlight VertSplit ctermbg='.s:prevbg
-		endif
-	endif
-
 	call s:CheckWinIds()
 endfunction
 
@@ -104,12 +98,21 @@ function! s:CheckWinIds()
 		endif
 	endif
 
-	" If no padding windows in any tab, remove autocmds
+	" If no padding windows in any tab, remove autocmds and reset VertSplit
 	if len(s:open_winids) == 0
 		augroup venter
 			autocmd!
 		augroup END
 		augroup! venter
+
+		if exists("g:venter_disable_vertsplit") && g:venter_disable_vertsplit && exists("s:vertsplit_hidden")
+			set fillchars-=vert:\ 
+			if has("gui_running")
+				execute 'highlight VertSplit guibg='.s:prevbg
+			else
+				execute 'highlight VertSplit ctermbg='.s:prevbg
+			endif
+		endif
 	endif
 
 	" If there are only padding windows left, close tab and open a new one
