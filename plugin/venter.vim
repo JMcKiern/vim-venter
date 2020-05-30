@@ -139,8 +139,7 @@ function! s:CreateWindow(pos)
 
 	" Buffer settings
 	set nonumber norelativenumber nocursorline nocursorcolumn
-	setlocal buftype=nofile bufhidden=wipe nobuflisted
-	" setlocal buftype=nofile bufhidden=wipe nomodifiable nobuflisted
+	setlocal buftype=nofile bufhidden=wipe nomodifiable nobuflisted
 
 	" Return to previous window if padding window selected
 	augroup venter
@@ -177,7 +176,10 @@ function! s:ResizeWindows()
 			endtry
 			let l:diff = &lines - l:buflines
 			if l:diff > 0
-				call appendbufline(winbufnr(l:winnr), l:buflines, map(range(0, l:diff), '""'))
+				let l:bufnr = winbufnr(l:winnr)
+				call setbufvar(l:bufnr, '&modifiable', 1)
+				call appendbufline(l:bufnr, l:buflines, map(range(0, l:diff), '""'))
+				call setbufvar(l:bufnr, '&modifiable', 0)
 			endif
 		endif
 	endfor
