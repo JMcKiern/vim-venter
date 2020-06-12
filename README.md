@@ -30,7 +30,7 @@ Run `git clone https://github.com/jmckiern/vim-venter ~/.vim/bundle/vim-venter` 
 
 `:Venter` - Open venter
 
-`:VenterClose` - Open venter
+`:VenterClose` - Close venter
 
 `:VenterResize` - Force a window resize (usually only happens on VimResized, TabEnter and WinEnter events)
 
