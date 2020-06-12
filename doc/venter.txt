@@ -1,0 +1,27 @@
+*venter.txt*	Venter - Vertically center window(s)
+*venter*        Venter - Vertically center window(s)
+
+INTRO                                                *venter*
+
+Venter is a vim plugin that vertically centers the current window(s)
+
+This is mainly useful when working with one file on a large monitor
+
+It is similar to goyo.vim but keeps the functionality (statusbar, tabline etc.)
+
+COMMANDS                                             *venter-commands*
+
+:Venter                      Open venter
+
+:VenterClose                 Close venter
+
+:VenterResize                Force a window resize (usually only happens on
+                             VimResized, TabEnter and WinEnter events)
+
+OPTIONS                                              *venter-options*
+
+g:venter_disable_vertsplit   Set to v:true before calling :Venter to disable the
+                             vertical window separators
+
+g:venter_width               Manually set width of padding windows (defaults to
+                             &columns/4)
