@@ -3,7 +3,7 @@
 
 INTRO                                                *venter*
 
-Venter is a vim plugin that vertically centers the current window(s)
+Venter is a vim plugin that horizontally centers the current window(s)
 
 This is mainly useful when working with one file on a large monitor
 
