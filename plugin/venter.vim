@@ -14,5 +14,9 @@ if !exists(":Venter")
 	command -nargs=0 Venter :call venter#Venter()
 endif
 
+if !exists(":VenterToggle")
+	command -nargs=0 VenterToggle :call venter#VenterToggle()
+endif
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

@@ -51,6 +51,14 @@ function! venter#Venter()
 	call s:DisableStatuslines()
 endfunction
 
+function! venter#VenterToggle()
+	if exists("t:venter_tabid") && has_key(s:open_winids, t:venter_tabid)
+		call VenterClose()
+	else
+		call venter#Venter()
+	endif
+endfunction
+
 function! VenterClose()
 	if exists("t:venter_tabid") && has_key(s:open_winids, t:venter_tabid)
 		execute 'let l:winids = deepcopy(s:open_winids.'.t:venter_tabid.')'
