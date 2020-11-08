@@ -159,13 +159,51 @@ function! s:DisableStatuslines()
 	endfor
 endfunction
 
+function! s:SetToMainWinTextwidth()
+	let l:winids = s:GetCurTabWinIds()
+	for l:winnr in range(winnr('$'))
+		let l:winnr = l:winnr + 1
+		let l:winid = win_getid(l:winnr)
+		if index(l:winids, l:winid) == -1
+			let l:mainwinnr = l:winnr
+			break
+		endif
+	endfor
+
+	if exists("l:mainwinnr")
+		let l:bufnr = winbufnr(l:mainwinnr)
+		let l:textwidth = getbufvar(l:bufnr, '&textwidth')
+	endif
+
+	if exists("l:textwidth") && l:textwidth > 0
+		execute l:mainwinnr.'wincmd w'
+
+		" From https://stackoverflow.com/a/26318602
+		redir =>a |exe "sil sign place buffer=".l:bufnr|redir end
+		let l:signlist=split(a, '\n')
+		let l:width=winwidth(l:mainwinnr) - ((&number||&relativenumber) ? &numberwidth : 0) - &foldcolumn - (len(signlist) > 1 ? 2 : 0)
+
+		return float2nr((&columns - &textwidth - (winwidth(l:mainwinnr) + 2 - l:width)) / 2.0)
+	endif
+
+	return 0
+endfunction
+
 function! s:ResizeWindows()
 	call s:CheckWinIds()
 	let l:winids = s:GetCurTabWinIds()
+	if winnr('$') == 3 && exists("g:venter_use_textwidth") && g:venter_use_textwidth
+		let l:venter_width = s:SetToMainWinTextwidth()
+		if l:venter_width == 0
+			let l:venter_width = exists("g:venter_width") ? g:venter_width : &columns/4
+		endif
+	else
+		let l:venter_width = exists("g:venter_width") ? g:venter_width : &columns/4
+	endif
 	for l:winid in l:winids
 		let l:winnr = win_id2win(l:winid)
 		if l:winnr
-			execute 'vertical '.l:winnr.'resize '. (exists("g:venter_width") ? g:venter_width : &columns/4)
+			execute 'vertical '.l:winnr.'resize '.l:venter_width
 			try
 				let l:buflines = line('$', l:winid)
 			catch /^Vim\%((\a\+)\)\=:E118:/

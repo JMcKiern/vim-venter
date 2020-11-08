@@ -41,3 +41,5 @@ Run `git clone https://github.com/jmckiern/vim-venter ~/.vim/bundle/vim-venter` 
 `g:venter_disable_vertsplit` - Set to `v:true` before calling `:Venter` to disable the vertical window separators
 
 `g:venter_width` - Manually set width of padding windows (defaults to `&columns/4`)
+
+`g:venter_use_textwidth` - If true, venter will resize the main window to it's textwidth. Note, this only works with 1 window open (excl. venter padding windows)
