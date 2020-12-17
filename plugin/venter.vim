@@ -10,6 +10,10 @@ if !exists("g:venter_disable_vertsplit")
 	let g:venter_disable_vertsplit = v:false
 endif
 
+if !exists("g:venter_close_tab_if_empty")
+	let g:venter_close_tab_if_empty = v:true
+endif
+
 if !exists(":Venter")
 	command -nargs=0 Venter :call venter#Venter()
 endif
