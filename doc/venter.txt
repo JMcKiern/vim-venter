@@ -1,5 +1,5 @@
-*venter.txt*	Venter - Vertically center window(s)
-*venter*        Venter - Vertically center window(s)
+*venter.txt*    Venter - Horizontally center window(s)
+*venter*        Venter - Horizontally center window(s)
 
 INTRO                                                *venter*
 
@@ -29,3 +29,6 @@ g:venter_width               Manually set width of padding windows (defaults to
 g:venter_use_textwidth       If true, venter will resize the main window to the
                              textwidth value in that buffer. Only works with 1
                              window (excl. venter padding windows)
+
+g:venter_close_tab_if_empty  Close the tab when the final window is closed if
+                             there are other tabs open (defaults to `v:true`)

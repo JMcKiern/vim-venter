@@ -118,8 +118,12 @@ function! s:CheckWinIds()
 		execute 'let l:winids = deepcopy(s:open_winids.'.t:venter_tabid.')'
 		if winnr('$') == l:numwin
 			execute 'unlet s:open_winids.'.t:venter_tabid
-			tabnew
-			tabclose -1
+			if exists("g:venter_close_tab_if_empty") && g:venter_close_tab_if_empty && tabpagenr('$') > 1
+				tabclose
+			else
+				tabnew
+				tabclose -1
+			endif
 		endif
 	endif
 endfunction
