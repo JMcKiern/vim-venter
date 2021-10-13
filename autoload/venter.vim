@@ -104,10 +104,12 @@ function! s:CheckWinIds()
 
 		if exists("g:venter_disable_vertsplit") && g:venter_disable_vertsplit && exists("s:vertsplit_hidden")
 			set fillchars-=vert:\ 
-			if has("gui_running")
-				execute 'highlight VertSplit guibg='.s:prevbg
-			else
-				execute 'highlight VertSplit ctermbg='.s:prevbg
+			if len(s:prevbg) > 0
+				if has("gui_running")
+					execute 'highlight VertSplit guibg='.s:prevbg
+				else
+					execute 'highlight VertSplit ctermbg='.s:prevbg
+				endif
 			endif
 		endif
 	endif
