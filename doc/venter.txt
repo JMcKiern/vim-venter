@@ -1,5 +1,5 @@
 *venter.txt*    Venter - Horizontally center window(s)
-*venter*        Venter - Horizontally center window(s)
+*Venter*        Venter - Horizontally center window(s)
 
 INTRO                                                *venter*
 
