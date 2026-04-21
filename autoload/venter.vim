@@ -21,13 +21,18 @@ function! venter#Venter()
 	if exists("g:venter_disable_vertsplit") && g:venter_disable_vertsplit
 		" Remove and hide vertical splitter
 		set fillchars+=vert:\ 
+		let l:mode = has("gui_running") ? "gui" : "cterm"
 		if !exists("s:prevbg")
-			let s:prevbg = synIDattr(synIDtrans(hlID("VertSplit")), "bg")
+			let s:prevbg = synIDattr(synIDtrans(hlID("VertSplit")), "bg", l:mode)
+		endif
+		let l:normalbg = synIDattr(synIDtrans(hlID("Normal")), "bg", l:mode)
+		if empty(l:normalbg)
+			let l:normalbg = "NONE"
 		endif
 		if has("gui_running")
-			highlight VertSplit guibg=bg
+			execute 'highlight VertSplit guibg='.l:normalbg
 		else
-			highlight VertSplit ctermbg=bg
+			execute 'highlight VertSplit ctermbg='.l:normalbg
 		endif
 		let s:vertsplit_hidden = v:true
 	endif
